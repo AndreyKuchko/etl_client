@@ -1,12 +1,12 @@
-# This document describes how deal with ETL client
+# This document describes how to deal with ETL client
 
 ## Prerequisites
 
-You will need Python 3.7, virtualenv and docker.
+You will need Python 3.8+ with virtualenv.
 
 ## Preparation
 
-1. Create python virtual environment, and install application
+1. Create python virtual environment and install the application
 ```shell
 make install
 ```
