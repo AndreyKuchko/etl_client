@@ -1,6 +1,8 @@
 import pytest
 
-from typing import List
+from typing import List, Optional
+
+from etl_client.processing.base import BaseProcessor
 
 
 CSV_RESPONSE_DATA = b"""Naive_Timestamp , Variable,value,Last Modified utc
@@ -48,7 +50,7 @@ class TestFile:
     _instance = None
 
     def __init__(self):
-        self.path: str
+        self.path: Optional[str] = None
         self.written_data: List = []
         self.closed: bool = False
 

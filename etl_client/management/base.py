@@ -85,7 +85,7 @@ class BaseAsyncWorker(BaseAsyncCommand):
             loop=self.loop,
         )
         today = date.today()
-        self.tasks = [today - timedelta(days=i) for i in range(settings.previous_days_count)]
+        self.tasks = [today - timedelta(days=i + 1) for i in range(settings.previous_days_count)]
         self.errors = {}
 
     async def run_processor(self, number: int):

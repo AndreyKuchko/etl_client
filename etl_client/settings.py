@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     source_timeout: int = 2
     source_api_key: str = "ADU8S67Ddy!d7f?"
     previous_days_count: int = 7
-    concurrency: int = 3
+    concurrency: int = 5
     destination_dir: str = "output"
     default_server_timezone: str = "Europe/Berlin"
     retry_interval: int = 1

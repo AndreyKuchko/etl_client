@@ -20,7 +20,14 @@ source .venv/bin/activate
 
 ## Usage
 
-TBD
+To process data from json endpoint, you can run following command:
+```shell
+etl_client json_consumer
+```
+To process data from csv endpoint, you can run following command:
+```shell
+etl_client csv_consumer
+```
 
 ## How to run tests
 ```shell
