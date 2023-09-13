@@ -3,6 +3,7 @@ from datetime import date
 from typing import List
 from unittest.mock import patch
 
+from etl_client.management import run_command
 from etl_client.management.base import BaseAsyncWorker
 from etl_client.processing.base import BaseProcessor
 from etl_client.settings import get_settings
@@ -25,14 +26,7 @@ class Command(BaseAsyncWorker):
 
 
 def test_worker_command():
-    parser = argparse.ArgumentParser()
-    Command.prepare_argparser(parser)
-    args, remaining_args = parser.parse_known_args([])
-    with patch(
-        "etl_client.management.manager.CommandManager.prepare_command", return_value=Command
-    ):
-        command = Command(args, remaining_args)
-        command.run()
+    run_command({"test_worker": Command}, ["test_worker"])
     settings = get_settings()
     assert ProcessorForTests.instances_count == settings.concurrency
     assert len(ProcessorForTests.days) == settings.previous_days_count
