@@ -1,9 +1,15 @@
-from logging import Logger, StreamHandler, getLogger
+from typing import Optional
+
+from logging import Formatter, Logger, StreamHandler, getLogger
 
 
-def get_logger(level: str) -> Logger:
+def get_logger(level: str, prefix: Optional[str] = None) -> Logger:
     """Sets up logger object with console handler."""
     logger = getLogger()
     logger.setLevel(level)
-    logger.addHandler(StreamHandler())
+    handler = StreamHandler()
+    if prefix is not None:
+        formatter = Formatter(f"[{prefix}] %(message)s")
+        handler.setFormatter(formatter)
+    logger.addHandler(handler)
     return logger

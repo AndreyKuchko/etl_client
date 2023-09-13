@@ -28,6 +28,10 @@ To process data from csv endpoint, you can run following command:
 ```shell
 etl_client csv_consumer
 ```
+To run csv and json consumers together, you can run following command:
+```shell
+etl_client run_all
+```
 
 ## Useful commands
 

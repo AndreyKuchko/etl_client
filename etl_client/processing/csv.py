@@ -19,7 +19,8 @@ class CsvProcessor(BaseProcessor):
     async def transform(self, day: date, response: aiohttp.ClientResponse):
         """Transform csv source by chunks."""
         destination = await self.open_destination_file(day)
-        with io.BytesIO(await response.read()) as bytes_io:  # TODO: iterate over chunks
+        # TODO: analyse possibility of iterating over chunks
+        with io.BytesIO(await response.read()) as bytes_io:
             with pd.read_csv(bytes_io, chunksize=100) as reader:
                 first_chunk = next(reader)
                 self.normalize_timestamps(first_chunk)

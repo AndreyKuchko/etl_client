@@ -55,18 +55,10 @@ class TestSession:
 
 
 class TestFile:
-    _instance = None
-
     def __init__(self):
         self.path: Optional[str] = None
         self.written_data: List = []
         self.closed: bool = False
-
-    @classmethod
-    def get_instance(cls):
-        if cls._instance is None:
-            cls._instance = cls()
-        return cls._instance
 
     async def open(self, path, mode):
         self.path = path

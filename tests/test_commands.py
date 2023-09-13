@@ -26,11 +26,12 @@ class Command(BaseAsyncWorker):
 
 def test_worker_command():
     parser = argparse.ArgumentParser()
+    Command.prepare_argparser(parser)
     args, remaining_args = parser.parse_known_args([])
     with patch(
         "etl_client.management.manager.CommandManager.prepare_command", return_value=Command
     ):
-        command = Command(args, remaining_args, parser)
+        command = Command(args, remaining_args)
         command.run()
     settings = get_settings()
     assert ProcessorForTests.instances_count == settings.concurrency
