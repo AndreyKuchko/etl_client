@@ -1,8 +1,8 @@
+from unittest.mock import patch
+
 import pytest
 
 from typing import List, Optional
-
-from etl_client.processing.base import BaseProcessor
 
 
 CSV_RESPONSE_DATA = b"""Naive_Timestamp , Variable,value,Last Modified utc
@@ -19,6 +19,7 @@ JSON_RESPONSE_DATA = (
 
 class TestResponse:
     status = 200
+    headers = {"Date": "Tue,12 Sep 2023 08:20:38 CET"}
 
     def __init__(self, content):
         self.content = content
@@ -26,24 +27,31 @@ class TestResponse:
     async def read(self):
         return self.content
 
-
-class TestRequestContextManager:
-    def __init__(self, content):
-        self.content = content
-
     async def __aenter__(self):
-        return TestResponse(self.content)
+        return self
 
     async def __aexit__(self, *args, **kwargs):
         pass
 
 
 class TestSession:
-    def get(self, url, params):
-        content = JSON_RESPONSE_DATA
+    def get(self, url, params=None):
         if url.endswith(".csv"):
             content = CSV_RESPONSE_DATA
-        return TestRequestContextManager(content)
+        elif url.endswith(".json"):
+            content = JSON_RESPONSE_DATA
+        else:
+            content = '{"status": "ok"}'
+        return TestResponse(content)
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *args, **kwargs):
+        pass
+
+    async def close(self):
+        pass
 
 
 class TestFile:
@@ -60,19 +68,17 @@ class TestFile:
             cls._instance = cls()
         return cls._instance
 
+    async def open(self, path, mode):
+        self.path = path
+        self.closed = False
+        self.written_data = []
+        return self
+
     async def write(self, data):
         self.written_data.append(data)
 
     async def close(self):
         self.closed = True
-
-
-async def aiofiles_open(path, mode):
-    test_file = TestFile.get_instance()
-    test_file.path = path
-    test_file.closed = False
-    test_file.written_data = []
-    return test_file
 
 
 @pytest.fixture
@@ -81,10 +87,11 @@ def mock_aiohttp_session():
 
 
 @pytest.fixture
-def mock_aiofiles_open():
-    return aiofiles_open
+def mock_file():
+    return TestFile()
 
 
-@pytest.fixture
-def mocked_file():
-    return TestFile.get_instance()
+@pytest.fixture(autouse=True, scope="session")
+def mock_status_check():
+    with patch("etl_client.settings.aiohttp.ClientSession", return_value=TestSession()):
+        yield

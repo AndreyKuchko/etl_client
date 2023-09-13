@@ -42,12 +42,11 @@ async def test_json_processor(
     expected_filename,
     expected_content,
     mock_aiohttp_session,
-    mock_aiofiles_open,
-    mocked_file,
+    mock_file,
 ):
     processor = processor_class(mock_aiohttp_session, get_logger("ERROR"))
-    with patch("etl_client.processing.base.open", mock_aiofiles_open):
+    with patch("etl_client.processing.base.open", mock_file.open):
         await processor.extract(date(2023, 9, 12))
-    assert mocked_file.path == expected_filename
-    assert mocked_file.closed
-    assert mocked_file.written_data == expected_content
+    assert mock_file.path == expected_filename
+    assert mock_file.closed
+    assert mock_file.written_data == expected_content

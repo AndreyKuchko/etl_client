@@ -8,7 +8,7 @@ import aiohttp
 
 from etl_client.exceptions import ProcessingError
 from etl_client.processing.base import BaseProcessor
-from etl_client.settings import settings
+from etl_client.settings import get_settings
 from etl_client.utils.logging import get_logger
 
 
@@ -24,7 +24,7 @@ class BaseCommand:
     ):
         self.args = args
         self.remaining_args = remaining_args
-        self.logger = get_logger(settings.log_level)
+        self.logger = get_logger(get_settings().log_level)
         self.validate_args(argparser)
 
     @staticmethod
@@ -76,6 +76,7 @@ class BaseAsyncWorker(BaseAsyncCommand):
     processor_class: Type[BaseProcessor]
 
     def __init__(self, *args, **kwargs):
+        settings = get_settings()
         super(BaseAsyncWorker, self).__init__(*args, **kwargs)
         timeout = aiohttp.ClientTimeout(total=settings.source_timeout)
         self.session = aiohttp.ClientSession(
@@ -102,7 +103,7 @@ class BaseAsyncWorker(BaseAsyncCommand):
 
     async def async_run(self):
         """Prepare pool of processors and run them together."""
-        await asyncio.gather(*[self.run_processor(i) for i in range(settings.concurrency)])
+        await asyncio.gather(*[self.run_processor(i) for i in range(get_settings().concurrency)])
         if self.errors:
             self.logger.error("Processing finished with errors for following days:")
             for day, error in self.errors.items():

@@ -29,6 +29,35 @@ To process data from csv endpoint, you can run following command:
 etl_client csv_consumer
 ```
 
+## Useful commands
+
+Clean output directory from result data files:
+```shell
+make clean_output
+```
+Clean application from temporary and service files:
+```shell
+make clean
+```
+
+## Application settings
+
+Application can be configured using environment variables, there is a full table of
+available settings:
+
+Name                           | Type | Default         | Description
+-------------------------------|------|-----------------|------------------------------------------------------------
+ETL_CLIENT_SOURCE_SCHEMA       | str  | http            | Schema of source url
+ETL_CLIENT_SOURCE_HOST         | str  | localhost       | Source host
+ETL_CLIENT_SOURCE_PORT         | int  | 8000            | Source port
+ETL_CLIENT_SOURCE_TIMEOUT      | int  | 2               | Timeout for source requests(in seconds)
+ETL_CLIENT_SOURCE_API_KEY      | str  | ADU8S67Ddy!d7f? | Api key for source requests
+ETL_CLIENT_SOURCE_TIMEZONE     | str  | UTC             | Timezone of source server. Used as a fallback
+ETL_CLIENT_PREVIOUS_DAYS_COUNT | int  | 7               | How many days with date to get
+ETL_CLIENT_CONCURRENCY         | int  | 5               | How many processors should work in parallel
+ETL_CLIENT_RETRY_INTERVAL      | int  | 1               | How long does it wait to retry failed request(in seconds)
+ETL_CLIENT_LOG_LEVEL           | str  | INFO            | Logging level
+
 ## How to run tests
 ```shell
 make tests

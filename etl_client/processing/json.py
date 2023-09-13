@@ -6,7 +6,7 @@ import aiohttp
 import pandas as pd
 
 from etl_client.processing.base import BaseProcessor
-from etl_client.settings import settings
+from etl_client.settings import get_settings
 
 
 class JsonProcessor(BaseProcessor):
@@ -28,7 +28,7 @@ class JsonProcessor(BaseProcessor):
         self.normalize_headers(df)
         df["Timestamp"] = (
             pd.to_datetime(df["Timestamp"], unit="ms")
-            .dt.tz_localize(settings.default_server_timezone)
+            .dt.tz_localize(get_settings().source_timezone)
             .dt.tz_convert("UTC")
         )
         df["Last_modified_utc"] = pd.to_datetime(df["Last_modified_utc"], unit="ms").dt.tz_localize(

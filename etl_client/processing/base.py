@@ -12,7 +12,7 @@ from logging import Logger
 from typing import Dict
 
 from etl_client.exceptions import ProcessingError
-from etl_client.settings import settings
+from etl_client.settings import get_settings
 
 RETRY_STATUSES = [429, 500]
 
@@ -31,7 +31,7 @@ class BaseProcessor:
     async def extract(self, day: date):
         """Get data by given url and run transformation."""
         url = self.url.format(day)
-        params = {"api_key": settings.source_api_key}
+        params = {"api_key": get_settings().source_api_key}
         call_required = True
         while call_required:
             async with self.session.get(url, params=params) as response:
@@ -40,7 +40,7 @@ class BaseProcessor:
                     await self.transform(day, response)
                     call_required = False
                 elif status in RETRY_STATUSES:
-                    retry_interval = settings.retry_interval
+                    retry_interval = get_settings().retry_interval
                     self.logger.info(
                         f"Source server returned returned {status}. Request will be "
                         f"retried in {retry_interval} second(s)."
@@ -82,7 +82,7 @@ class BaseProcessor:
         """Open destination file for writing data."""
         return await open(
             path.join(
-                settings.destination_dir,
+                get_settings().destination_dir,
                 f"{self.name.upper()}_{day}-00-00_{day + timedelta(days=1)}-00-00.csv",
             ),
             mode="w+",

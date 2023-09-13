@@ -3,11 +3,9 @@ from datetime import date
 from typing import List
 from unittest.mock import patch
 
-import pytest
-
 from etl_client.management.base import BaseAsyncWorker
 from etl_client.processing.base import BaseProcessor
-from etl_client.settings import settings
+from etl_client.settings import get_settings
 
 
 class ProcessorForTests(BaseProcessor):
@@ -34,5 +32,6 @@ def test_worker_command():
     ):
         command = Command(args, remaining_args, parser)
         command.run()
+    settings = get_settings()
     assert ProcessorForTests.instances_count == settings.concurrency
     assert len(ProcessorForTests.days) == settings.previous_days_count
