@@ -8,7 +8,7 @@ from etl_client.management.base import BaseCommand
 
 class CommandManager:
     """Wrapper around commands that makes available choosing of commands from
-    common parent command(etl_client)
+    common parent command(etl_client).
     """
 
     def __init__(self, registry: Dict, raw_args: List):

@@ -50,7 +50,7 @@ Application can be configured using environment variables, there is a full table
 available settings:
 
 Name                           | Type | Default         | Description
--------------------------------|------|-----------------|------------------------------------------------------------
+-------------------------------|------|-----------------|-----------------------------------------------------------------
 ETL_CLIENT_SOURCE_SCHEMA       | str  | http            | Schema of source url
 ETL_CLIENT_SOURCE_HOST         | str  | localhost       | Source host
 ETL_CLIENT_SOURCE_PORT         | int  | 8000            | Source port
@@ -60,6 +60,7 @@ ETL_CLIENT_SOURCE_TIMEZONE     | str  | UTC             | Timezone of source ser
 ETL_CLIENT_PREVIOUS_DAYS_COUNT | int  | 7               | How many days with date to get
 ETL_CLIENT_CONCURRENCY         | int  | 5               | How many processors should work in parallel
 ETL_CLIENT_RETRY_INTERVAL      | int  | 1               | How long does it wait to retry failed request(in seconds)
+ETL_CLIENT_READ_CHUNK_SIZE     | int  | 100             | How many line to use per iteration over document(only for csv)
 ETL_CLIENT_LOG_LEVEL           | str  | INFO            | Logging level
 
 ## How to run tests

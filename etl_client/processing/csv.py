@@ -21,7 +21,7 @@ class CsvProcessor(BaseProcessor):
         destination = await self.open_destination_file(day)
         # TODO: analyse possibility of iterating over chunks
         with io.BytesIO(await response.read()) as bytes_io:
-            with pd.read_csv(bytes_io, chunksize=100) as reader:
+            with pd.read_csv(bytes_io, chunksize=get_settings().read_chunk_size) as reader:
                 first_chunk = next(reader)
                 self.normalize_timestamps(first_chunk)
                 await self.load(first_chunk, destination, add_headers=True)

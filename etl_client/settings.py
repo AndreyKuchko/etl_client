@@ -4,7 +4,7 @@ from functools import lru_cache
 from typing import Optional
 
 import aiohttp
-from pydantic import ValidationError, model_validator
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 logger = logging.getLogger(__name__)
@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     concurrency: int = 5
     destination_dir: str = "output"
     retry_interval: int = 1
+    read_chunk_size: int = 100
     log_level: str = "INFO"
 
     @model_validator(mode="after")
@@ -53,4 +54,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
+    """Provide access to current settings instance."""
     return Settings()
